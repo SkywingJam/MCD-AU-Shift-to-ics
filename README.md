@@ -6,7 +6,7 @@ A simple Chrome extension to export your McDonald's Australia shifts to an ICS c
 
 - Extracts roster/shift details from the web page.
 - Generates an `.ics` file compatible with major calendar apps.
-    - Recommended to use cloud-based calendars (Google Calendar, Outlook) for automatic syncing across devices.
+  - Recommended to use cloud-based calendars (Google Calendar, Outlook) for automatic syncing across devices.
 
 ## Dependencies
 
@@ -27,6 +27,8 @@ A simple Chrome extension to export your McDonald's Australia shifts to an ICS c
 2. Click 📅 button and download your shifts as an ICS file.
 3. Open the downloaded file with your calendar app of choice to import the events.
 
+![screenshot](etc/screenshot.png)
+
 ### Reporting Issues
 
 If you encounter any issues or have suggestions for improvements, please open an issue in the issue tracker of this repository.
@@ -34,11 +36,13 @@ If you encounter any issues or have suggestions for improvements, please open an
 ## Permissions & Privacy
 
 ### Permissions
+
 - **Scripting:** Required to inject the parsing script into the roster page to extract shift details.
 - **Storage:** Used to store local settings or temporary data needed for generating the calendar file.
 - **Host Permissions:** The extension requires access to `https://myrestaurant.mcdonalds.com.au/*` to read the roster data directly from the page.
 
 ### Privacy
+
 - **Local Processing:** All data extraction and file generation happen locally within your browser.
 - **No Data Collection:** This extension does not collect, store, or transmit your personal information or roster details to any external servers.
 - **Open Source:** The code is open source and can be inspected to verify its behavior.
