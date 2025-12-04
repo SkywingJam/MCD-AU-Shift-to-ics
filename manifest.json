@@ -1,0 +1,21 @@
+{
+    "name": "MCD Shift Parser",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": ["scripting", "storage"],
+    "description": "A Chrome extension to parse and display shifts from myJob to ics files.",
+    "host_permissions": [
+        "https://myrestaurant.mcdonalds.com.au/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://myrestaurant.mcdonalds.com.au/EmployeeSS/MyRoster/Index/*"],
+            "js": ["luxon.min.js", "content.js"]
+        }
+    ],
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    }
+}
