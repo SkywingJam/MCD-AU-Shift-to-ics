@@ -45,7 +45,7 @@
             if (breakTag && (breakTag.innerText.includes("AM") || breakTag.innerText.includes("PM"))) {
                 remarks = `Break: ${breakTag.innerText.trim()}`;
             } else {
-                remarks = `Break: No break`;
+                remarks = `Break: No meal break`;
             }
 
             // Extract role (e.g., PI, SI, etc.)
