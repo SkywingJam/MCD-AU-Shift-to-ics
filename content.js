@@ -5,27 +5,26 @@
         let shifts = [];
         document.querySelectorAll("div#time").forEach(timeDiv => {
             let shiftId = timeDiv.querySelector("strong")?.innerText?.trim();
-            // detect if shiftID contains "Today" or "Tomorrow"
+            
+            // Detect if shiftID contains "Today" or "Tomorrow"
             if (shiftId && (shiftId.includes("Today") || shiftId.includes("Tomorrow"))) {
-                // remove "Today" or "Tomorrow" and the newline
                 shiftId = shiftId.replace(/Today|Tomorrow/g, "").trim();
-                // remove the newline character
                 shiftId = shiftId.replace(/\n/g, "");
             }
             if (!shiftId) return;
 
             // Extract date from shiftId
-            let dateStr = shiftId.split(" ").pop(); // Example: "31/Mar/2025"
+            let dateStr = shiftId.split(" ").pop(); 
             let shiftDate = DateTime.fromFormat(dateStr, "dd/MMM/yyyy");
 
             // Extract start time
             let startTag = [...timeDiv.childNodes].find(n => n.textContent.includes("Start"));
-            let startStr = startTag ? startTag.nextElementSibling.innerText.trim() : null; // Example: "4:00 PM Monday 31/Mar/2025"
+            let startStr = startTag ? startTag.nextElementSibling.innerText.trim() : null; 
             let startTime = startStr ? DateTime.fromFormat(startStr, "h:mm a EEEE dd/MMM/yyyy") : null;
 
             // Extract end time
             let endTag = [...timeDiv.childNodes].find(n => n.textContent.includes("Finish"));
-            let endStr = endTag ? endTag.nextElementSibling.innerText.trim() : null; // Example: "10:00 PM Monday 31/Mar/2025"
+            let endStr = endTag ? endTag.nextElementSibling.innerText.trim() : null; 
             let endTime = endStr ? DateTime.fromFormat(endStr, "h:mm a EEEE dd/MMM/yyyy") : null;
 
             if (!startTime || !endTime) return;
@@ -48,22 +47,20 @@
                 remarks = `Break: No meal break`;
             }
 
-            // Extract role (e.g., PI, SI, etc.)
+            // Extract role
             let roleTag = timeDiv.querySelectorAll("span")[4+isToday];
             if (roleTag && roleTag.innerText.includes("Break")) {
                 roleTag = timeDiv.querySelectorAll("span")[5+isToday];
             }
             let role = roleTag ? roleTag.innerText.trim() : "No role";
 
-            // Append role to remarks
-            remarks += `\\n${role}`;
-
-            // Include uid in remarks for consistency with iOS Shortcuts, so that we can retrieve it later when creating the ICS file
+            // Append role and UID to remarks with a single newline
             let uid = "UID:" + btoa(unescape(encodeURIComponent(shiftId)));
-            remarks += `\\n${uid}`;
+            remarks += `\\n${role}\\n${uid}`;
 
             shifts.push({ shiftId, startTime, endTime, location, remarks, uid });
         });
+        
         console.log("Shifts found:", shifts);
         return shifts;
     }
@@ -71,6 +68,7 @@
     function createICS(shifts) {
         let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\n";
         let now = DateTime.now().toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
+        
         shifts.forEach(shift => {
             icsContent += `
 BEGIN:VEVENT
@@ -94,6 +92,31 @@ END:VEVENT\n`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+    }
+
+    function triggerShortcut(shifts) {
+        let shortcutPayload = shifts.map(shift => {
+            // Convert literal '\n' into actual newlines for Apple Calendar
+            let formattedNotes = shift.remarks.replace(/\\n/g, '\n');
+
+            return {
+                title: "MCD",
+                start: shift.startTime.toISO(), 
+                end: shift.endTime.toISO(),
+                location: shift.location,
+                notes: formattedNotes,
+                uid: shift.uid
+            };
+        });
+
+        let jsonString = JSON.stringify(shortcutPayload);
+        let encodedJSON = encodeURIComponent(jsonString);
+        
+        // Construct the URL to trigger the iOS Shortcut
+        let shortcutName = encodeURIComponent("MCD Shift Backend");
+        let shortcutURL = `shortcuts://run-shortcut?name=${shortcutName}&input=text&text=${encodedJSON}`;
+        
+        window.location.href = shortcutURL;
     }
 
     function addHoverButton() {
@@ -122,16 +145,19 @@ END:VEVENT\n`;
         button.addEventListener("click", () => {
             let shifts = parseShift();
             let numShifts = shifts.length;
+            
             if (numShifts > 0) {
-                createICS(shifts);
+                // Change to createICS(shifts) if you want to swap back to local file downloads
+                triggerShortcut(shifts);
+                
                 if (numShifts === 1) {
                     showFloatingMessage("Converted 1 shift.", true);
-                }
-                else {
+                } else {
                     showFloatingMessage(`Converted ${numShifts} shifts.`, true);
                 }
+            } else {
+                showFloatingMessage("No shifts found.", false, 2000);
             }
-            else showFloatingMessage("No shifts found.", false, 2000);
         });
 
         document.body.appendChild(button);
@@ -141,9 +167,9 @@ END:VEVENT\n`;
         const messageDiv = document.createElement("div");
         messageDiv.innerText = message;
         messageDiv.style.position = "fixed";
-        messageDiv.style.bottom = "100px"; // Position above the button
+        messageDiv.style.bottom = "100px"; 
         messageDiv.style.right = "20px";
-        messageDiv.style.backgroundColor = isSuccess ? "#28a745" : "#dc3545"; // Green for success, red for error
+        messageDiv.style.backgroundColor = isSuccess ? "#28a745" : "#dc3545"; 
         messageDiv.style.color = "#fff";
         messageDiv.style.padding = "10px 15px";
         messageDiv.style.borderRadius = "12.5px";
@@ -155,20 +181,17 @@ END:VEVENT\n`;
     
         document.body.appendChild(messageDiv);
     
-        // Fade-in
         setTimeout(() => {
             messageDiv.style.opacity = "1";
         }, 10);
     
-        // Fade out
         setTimeout(() => {
-            messageDiv.style.opacity = "0"; // Start fade-out
+            messageDiv.style.opacity = "0"; 
             setTimeout(() => {
                 document.body.removeChild(messageDiv);
             }, 500);
         }, duration);
     }
 
-    // Add the hover button when the script runs
     addHoverButton();
 })();
