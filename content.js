@@ -58,7 +58,12 @@
             // Append role to remarks
             remarks += `\\n${role}`;
 
-            shifts.push({ shiftId, startTime, endTime, location, remarks });
+            // Include uid in remarks for consistency with iOS Shortcuts, so that we can retrieve it later when creating the ICS file
+            let uid = "UID:" + btoa(unescape(encodeURIComponent(shiftId)));
+            // 将 UID 拼接到备注的最末尾 (使用 \\n\\n 确保在 ICS 中渲染为换行)
+            remarks += `\\n${uid}`;
+
+            shifts.push({ shiftId, startTime, endTime, location, remarks, uid });
         });
         console.log("Shifts found:", shifts);
         return shifts;
@@ -68,12 +73,11 @@
         let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\n";
         let now = DateTime.now().toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'");
         shifts.forEach(shift => {
-            let uid = btoa(shift.shiftId); 
             icsContent += `
 BEGIN:VEVENT
 LAST-MODIFIED:${now}
 DTSTAMP:${now}
-UID:${uid}
+UID:${shift.uid}
 SUMMARY:MCD
 DTSTART:${shift.startTime.toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'")}
 DTEND:${shift.endTime.toUTC().toFormat("yyyyMMdd'T'HHmmss'Z'")}
