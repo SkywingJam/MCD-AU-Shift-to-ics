@@ -60,7 +60,6 @@
 
             // Include uid in remarks for consistency with iOS Shortcuts, so that we can retrieve it later when creating the ICS file
             let uid = "UID:" + btoa(unescape(encodeURIComponent(shiftId)));
-            // 将 UID 拼接到备注的最末尾 (使用 \\n\\n 确保在 ICS 中渲染为换行)
             remarks += `\\n${uid}`;
 
             shifts.push({ shiftId, startTime, endTime, location, remarks, uid });
