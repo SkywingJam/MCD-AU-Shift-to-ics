@@ -8,6 +8,8 @@
 
 ### [➜ Get MCD Shift Sync](https://www.icloud.com/shortcuts/84e456e3c7de4fee96a429ead6b50311)
 
+Or visit **[shifts.skywingjam.com](https://shifts.skywingjam.com)** for a quick guide. On a computer, it has a QR code you can scan with your iPhone.
+
 Every time you run it, it:
 
 - **adds** new shifts from your roster to your calendar,
