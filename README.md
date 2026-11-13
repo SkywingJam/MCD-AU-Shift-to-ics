@@ -18,8 +18,8 @@ Every time you run it, it:
 For example, after the roster changed (Wed moved later, Fri cancelled, a new Thu shift added), one run updated the calendar to match:
 
 <p>
-  <img src="etc/shortcut/5-changes.png" width="200" alt="Summary after a roster change: 1 added, 5 already in calendar, 1 removed">
-  <img src="etc/shortcut/6-calendar-week.png" width="520" alt="Calendar week view with the updated MCD shifts">
+  <img src="docs/img/5-changes.png" width="200" alt="Summary after a roster change: 1 added, 5 already in calendar, 1 removed">
+  <img src="docs/img/6-calendar-week.png" width="520" alt="Calendar week view with the updated MCD shifts">
 </p>
 
 <sub>To protect privacy, all screenshots use a mock roster page with made-up data.</sub>
@@ -38,10 +38,10 @@ For example, after the roster changed (Wed moved later, Fri cancelled, a new Thu
 4. A summary shows what was added, updated and removed. Run it again whenever your roster changes.
 
 <p>
-  <img src="etc/shortcut/1-open-roster.png" width="200" alt="Step 1: My Roster in Safari, page menu button">
-  <img src="etc/shortcut/2-tap-share.png" width="200" alt="Step 2: tap Share">
-  <img src="etc/shortcut/3-tap-shortcut.png" width="200" alt="Step 3: tap MCD Shift Sync in the share sheet">
-  <img src="etc/shortcut/4-summary.png" width="200" alt="Step 4: summary of changes">
+  <img src="docs/img/1-open-roster.png" width="200" alt="Step 1: My Roster in Safari, page menu button">
+  <img src="docs/img/2-tap-share.png" width="200" alt="Step 2: tap Share">
+  <img src="docs/img/3-tap-shortcut.png" width="200" alt="Step 3: tap MCD Shift Sync in the share sheet">
+  <img src="docs/img/4-summary.png" width="200" alt="Step 4: summary of changes">
 </p>
 
 If it says it can't run scripts: **Settings → Apps → Shortcuts → Advanced → Allow Running Scripts**.
@@ -56,8 +56,8 @@ New shortcuts end up at the bottom of the **View More** list. Pin it once to put
 - **(D)** Tap **✓** to save.
 
 <p>
-  <img src="etc/shortcut/pin-1-view-more.png" width="200" alt="A and B: View More list and Edit Actions">
-  <img src="etc/shortcut/pin-2-favourites.png" width="200" alt="C and D: MCD Shift Sync in Favourites, then tap the tick">
+  <img src="docs/img/pin-1-view-more.png" width="200" alt="A and B: View More list and Edit Actions">
+  <img src="docs/img/pin-2-favourites.png" width="200" alt="C and D: MCD Shift Sync in Favourites, then tap the tick">
 </p>
 
 ### Good to know

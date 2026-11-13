@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MCD Shift Sync</title>
+<meta name="description" content="Put your McDonald's Australia myJob roster straight into your iPhone calendar, and keep it up to date.">
+<meta property="og:title" content="MCD Shift Sync">
+<meta property="og:description" content="Your myJob roster, in your iPhone calendar. Adds, updates and removes shifts in one tap.">
+<meta name="theme-color" content="#f6f6f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111214" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e4352b'/%3E%3Crect x='14' y='18' width='36' height='30' rx='5' fill='white'/%3E%3Crect x='14' y='18' width='36' height='8' rx='3' fill='%23ffd5d2'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f6f6f8; --card: #ffffff; --text: #1d1d1f; --muted: #6e6e73; --line: #e3e3e8;
+  --accent: #e4352b; --accent-text: #ffffff; --chip: #f0f0f3; --shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+  --radius: 18px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111214; --card: #1c1d20; --text: #f2f2f4; --muted: #a1a1a8; --line: #2c2d31;
+          --chip: #26272b; --shadow: 0 1px 2px rgba(0,0,0,.4); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; font-size: 17px; }
+a { color: var(--accent); }
+.wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+header.hero { text-align: center; padding-top: 56px; padding-bottom: 28px; }
+.icon { width: 76px; height: 76px; border-radius: 18px; background: var(--accent); display: grid; place-items: center;
+        margin: 0 auto 18px; box-shadow: 0 10px 30px rgba(228,53,43,.3); }
+h1 { font-size: clamp(34px, 7vw, 48px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 10px; }
+.tagline { font-size: clamp(18px, 3.6vw, 21px); color: var(--muted); margin: 0 auto 26px; max-width: 30em; }
+.cta { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: var(--accent-text);
+       text-decoration: none; font-weight: 650; font-size: 19px; padding: 16px 30px; border-radius: 999px;
+       box-shadow: 0 6px 20px rgba(228,53,43,.28); }
+.cta:active { transform: scale(.98); }
+.cta:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+.facts li { background: var(--chip); color: var(--muted); font-size: 14px; padding: 6px 12px; border-radius: 999px; }
+.desktop-only { display: none; }
+@media (hover: hover) and (pointer: fine) and (min-width: 721px) {
+  .desktop-only { display: block; }
+}
+.qr { margin: 30px auto 0; display: inline-flex; align-items: center; gap: 16px; background: var(--card);
+      padding: 14px 20px 14px 14px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: left; }
+.qr img { width: 112px; height: 112px; background: #fff; border-radius: 10px; padding: 6px; display: block; }
+.qr p { margin: 0; font-size: 15px; color: var(--muted); max-width: 13em; }
+.qr strong { color: var(--text); display: block; }
+section { padding-top: 34px; padding-bottom: 34px; }
+h2 { font-size: 26px; letter-spacing: -.01em; margin: 0 0 6px; }
+.lead { color: var(--muted); margin: 0 0 22px; }
+.features { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.feature { background: var(--card); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.feature b { display: block; font-size: 17px; margin-bottom: 4px; }
+.feature span { color: var(--muted); font-size: 15px; }
+.steps { display: grid; gap: 16px; grid-template-columns: repeat(4, 1fr); counter-reset: step; }
+.steps.two { grid-template-columns: repeat(2, minmax(0, 260px)); }
+.step { margin: 0; }
+.step img { width: 100%; height: auto; display: block; border-radius: 22px; border: 1px solid var(--line);
+            background: var(--card); box-shadow: var(--shadow); }
+.step figcaption { font-size: 15px; margin-top: 10px; color: var(--muted); }
+.step figcaption b { color: var(--text); }
+.num { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--accent);
+       color: #fff; font-size: 13px; font-weight: 700; margin-right: 6px; vertical-align: 1px; }
+@media (max-width: 720px) {
+  .steps, .steps.two { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 72%;
+                       overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px;
+                       margin: 0 -16px; padding-left: 16px; padding-right: 16px; scroll-padding: 16px; }
+  .step { scroll-snap-align: start; }
+  .swipe { display: block !important; }
+}
+.swipe { display: none; font-size: 14px; color: var(--muted); margin: -10px 0 14px; }
+.demo { display: grid; gap: 16px; grid-template-columns: minmax(0, 220px) 1fr; align-items: start; }
+.demo img { width: 100%; height: auto; border-radius: 18px; border: 1px solid var(--line); display: block; }
+@media (max-width: 720px) { .demo { grid-template-columns: 1fr; } .demo img.phone { max-width: 260px; } }
+.note { background: var(--card); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); font-size: 15px; }
+.note code { background: var(--chip); padding: 1px 6px; border-radius: 6px; font-size: 14px; }
+details { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 10px; }
+summary { cursor: pointer; padding: 16px 18px; font-weight: 600; list-style: none; position: relative; padding-right: 44px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--muted);
+                 font-size: 22px; font-weight: 400; }
+details[open] summary::after { content: "–"; }
+details > div { padding: 0 18px 16px; color: var(--muted); font-size: 15px; }
+footer { border-top: 1px solid var(--line); margin-top: 30px; padding: 26px 0 48px; color: var(--muted); font-size: 14px; text-align: center; }
+footer p { margin: 6px 0; }
+</style>
+</head>
+<body>
+<main>
+  <header class="hero wrap">
+    <div class="icon" aria-hidden="true">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><rect x="5" y="8" width="34" height="30" rx="6" fill="#fff"/><rect x="5" y="8" width="34" height="9" rx="4" fill="#ffd5d2"/><g fill="#e4352b"><circle cx="14" cy="24" r="2.3"/><circle cx="22" cy="24" r="2.3"/><circle cx="30" cy="24" r="2.3"/><circle cx="14" cy="31" r="2.3"/><circle cx="22" cy="31" r="2.3"/></g></svg>
+    </div>
+    <h1>MCD Shift Sync</h1>
+    <p class="tagline">Your myJob roster, in your iPhone calendar. One tap adds new shifts, updates changed ones and removes cancelled ones.</p>
+    <a class="cta" href="https://www.icloud.com/shortcuts/84e456e3c7de4fee96a429ead6b50311">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m0 0-4-4m4 4 4-4M4 16h12" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Add to iPhone
+    </a>
+    <ul class="facts">
+      <li>Free</li><li>iPhone + Safari</li><li>Nothing leaves your phone</li>
+    </ul>
+    <div class="desktop-only">
+      <div class="qr">
+        <img src="img/qr.svg" alt="QR code linking to the MCD Shift Sync shortcut">
+        <p><strong>On a computer?</strong>Scan this with your iPhone camera to add the shortcut.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="wrap" aria-labelledby="what">
+    <h2 id="what">What it does</h2>
+    <p class="lead">Run it from My Roster whenever your roster changes.</p>
+    <div class="features">
+      <div class="feature"><b>Adds new shifts</b><span>Every shift on your roster goes into the calendar you choose.</span></div>
+      <div class="feature"><b>Keeps them up to date</b><span>Changed times, store, role or meal break are updated, and duplicates removed.</span></div>
+      <div class="feature"><b>Removes cancelled shifts</b><span>Your iPhone asks before anything is deleted.</span></div>
+      <div class="feature"><b>Shows what changed</b><span>A short summary after every run.</span></div>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="setup">
+    <h2 id="setup">Set up in a minute</h2>
+    <p class="lead">Tap <b>Add to iPhone</b> above, choose a calendar, then:</p>
+    <p class="swipe">Swipe to see each step →</p>
+    <div class="steps">
+      <figure class="step">
+        <img src="img/1-open-roster.png" width="495" height="1000" loading="lazy" alt="My Roster open in Safari, with the page menu button circled">
+        <figcaption><span class="num">1</span>Open <b>My Roster</b> in <b>Safari</b> and tap the page menu button.</figcaption>
+      </figure>
+      <figure class="step">
+        <img src="img/2-tap-share.png" width="460" height="930" loading="lazy" alt="Safari page menu with Share highlighted">
+        <figcaption><span class="num">2</span>Tap <b>Share</b>. On some iPhones it's right on the toolbar.</figcaption>
+      </figure>
+      <figure class="step">
+        <img src="img/3-tap-shortcut.png" width="495" height="1000" loading="lazy" alt="Share sheet with MCD Shift Sync highlighted and View More outlined">
+        <figcaption><span class="num">3</span>Tap <b>MCD Shift Sync</b>. Not there? Tap <b>View More</b>, then <a href="#pin">pin it</a>.</figcaption>
+      </figure>
+      <figure class="step">
+        <img src="img/4-summary.png" width="495" height="1000" loading="lazy" alt="Summary pop-up: Roster synced, Added 6">
+        <figcaption><span class="num">4</span>The first time, tap <b>Always Allow</b>. You'll see what changed.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap" id="pin" aria-labelledby="pin-title">
+    <h2 id="pin-title">Pin it to the share sheet</h2>
+    <p class="lead">New shortcuts start at the bottom of <b>View More</b>. Pin it once and it's always in the first row.</p>
+    <div class="steps two">
+      <figure class="step">
+        <img src="img/pin-1-view-more.png" width="496" height="1000" loading="lazy" alt="View More list with MCD Shift Sync and Edit Actions highlighted">
+        <figcaption><span class="num">A</span>In <b>View More</b>, find MCD Shift Sync near the bottom. <span class="num">B</span>Tap <b>Edit Actions</b>.</figcaption>
+      </figure>
+      <figure class="step">
+        <img src="img/pin-2-favourites.png" width="460" height="930" loading="lazy" alt="Edit Actions with MCD Shift Sync in Favourites and the tick highlighted">
+        <figcaption><span class="num">C</span>Tap the green <b>＋</b> next to it so it moves to <b>Favourites</b>. <span class="num">D</span>Tap <b>✓</b>.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="action">
+    <h2 id="action">When your roster changes</h2>
+    <p class="lead">Wednesday moved later, Friday cancelled, a new Thursday shift: one run and the calendar matches.</p>
+    <div class="demo">
+      <img class="phone" src="img/5-changes.png" width="495" height="1000" loading="lazy" alt="Summary: Added 1, Already in calendar 5, Removed 1">
+      <img src="img/6-calendar-week.png" width="1000" height="672" loading="lazy" alt="Calendar week view showing the updated MCD shifts">
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="faq">
+    <h2 id="faq">Good to know</h2>
+    <details>
+      <summary>Why Safari? Can I use Chrome?</summary>
+      <div>Only Safari can hand the roster page to a shortcut. Chrome and other iPhone browsers just share the link. You'll need to log in to myJob in Safari.</div>
+    </details>
+    <details>
+      <summary>It says it can't run scripts</summary>
+      <div>Go to <b>Settings → Apps → Shortcuts → Advanced</b> and turn on <b>Allow Running Scripts</b>.</div>
+    </details>
+    <details>
+      <summary>Will it touch my other calendar events?</summary>
+      <div>No. It only manages events titled “MCD” that it can recognise (each has a shift ID in its notes), and only for the roster weeks on the page. Events added by the old Chrome extension are recognised too, so nothing is duplicated.</div>
+    </details>
+    <details>
+      <summary>What if the page didn't load properly?</summary>
+      <div>It checks that the number of shifts it read matches what your roster says. If not, it stops with a message and doesn't change your calendar. Reload the page and try again.</div>
+    </details>
+    <details>
+      <summary>Is my data safe?</summary>
+      <div>Everything happens on your iPhone. The shortcut reads the roster page you're already looking at and writes to your calendar. Nothing is sent anywhere, and your login details aren't stored.</div>
+    </details>
+    <details>
+      <summary>It stopped working</summary>
+      <div>myJob may have changed its page. You'll see “Couldn't sync your roster” and your calendar stays as it was. Please <a href="https://github.com/SkywingJam/MCD-AU-Shift-to-ics/issues">report it on GitHub</a>.</div>
+    </details>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Unofficial. Not affiliated with, endorsed by, or connected to McDonald's. For McDonald's Australia's myJob only.</p>
+  <p>Screenshots use a mock roster page with made-up data.</p>
+  <p><a href="https://github.com/SkywingJam/MCD-AU-Shift-to-ics">Source on GitHub</a></p>
+</footer>
+</body>
+</html>
